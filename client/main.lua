@@ -1,3 +1,11 @@
+local usergroup = 'user'
+
+Citizen.CreateThread(function()
+    TriggerEvent("vorp:ExecuteServerCallBack", "getGroupReport", function(group)
+        usergroup = group
+    end, 'i')
+end)
+
 RegisterNetEvent('poke_rpchat:sendProximityMessage')
 AddEventHandler('poke_rpchat:sendProximityMessage', function(playerId, title, message, color)
 	local player = PlayerId()
@@ -41,5 +49,22 @@ AddEventHandler('poke_rpchat:marcador', function(targetCoords, type, blip)
             RemoveBlip(call)
             return
         end
+    end
+end)
+
+RegisterNetEvent('poke_rpchat:sendReport')
+AddEventHandler('poke_rpchat:sendReport', function(id, name, message)
+    local myId = PlayerId()
+    local pid = GetPlayerFromServerId(id)
+    
+    if pid == myId then
+        
+        TriggerEvent('chat:addMessage', {args = {"^1[Reporte]: ^r", "Enviado a todos los administradores"}})
+        
+    end
+    
+    if usergroup ~= 'user' then
+        local message =  " [".. id .."] " .. name .."  "..": " .. message
+        TriggerEvent('chat:addMessage', {args = {"^1[Reporte]:^r", message}})
     end
 end)

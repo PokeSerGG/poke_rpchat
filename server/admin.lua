@@ -1,32 +1,5 @@
 Inventory = exports.vorp_inventory:vorp_inventoryApi()
--- ADMIN COMMANDS
-RegisterCommand('curar', function(source, args, user)
-    local _source = source
-    TriggerEvent("vorp:getCharacter", _source, function(user)
-        local group = user.group
-        if group == 'admin' then
-            TriggerClientEvent("vorpmetabolism:setValue", _source, "Hunger", 1000)
-            TriggerClientEvent("vorpmetabolism:setValue", _source, "Thirst", 1000)
-        end
-    end)
-end, false)
-
-RegisterCommand('additem', function(source, args, rawCommand)
-    local _source = source
-    local player = tonumber(args[1])
-    local item = args[2]
-    local count = args[3]
-    TriggerEvent("vorp:getCharacter", _source, function(user)
-        local group = user.group
-        if group == 'admin' then
-            if player and item and count then
-                Inventory.addItem(player, item, count)
-            else
-                TriggerClientEvent("chatMessage", _source, "Error de sintaxis", {255, 0, 0}, "/additem id item count")
-            end
-        end
-    end)
-end, false)
+VORP = exports.vorp_core:vorpAPI()
 
 RegisterCommand('report', function(source, args, rawCommand)
     local source = source
@@ -34,12 +7,24 @@ RegisterCommand('report', function(source, args, rawCommand)
     local name = GetPlayerName(source)
     TriggerEvent("vorp:getCharacter", source, function(user)
         local playerName = user.firstname..' '..user.lastname
-        TriggerClientEvent("chatMessage", source, "[Sistema]", {255, 0, 0}, "Tu report ha sido enviado a los administradores")
+        TriggerClientEvent("poke_rpchat:sendReport", -1, source, name, args)
         if Config.UseDiscord then
             DiscordWeb(16753920, "Nombre OOC: "..name.." / Nombre IC: "..playerName, args, "Reportes")
         end
     end)
 end, false)
+
+VORP.addNewCallBack("getGroupReport", function(source, cb, item)
+    local _source = source
+    TriggerEvent("vorp:getCharacter", _source, function(user)
+        local group = user.group
+        if group ~= nil then
+            cb(group)
+        else
+            cb('user')
+        end
+    end)
+end)
 
 function DiscordWeb(color, name, message, footer)
     local embed = {
