@@ -1,3 +1,8 @@
+VorpCore = {}
+
+TriggerEvent("getCore",function(core)
+    VorpCore = core
+end)
 
 -- LOCAL OOC
 AddEventHandler('chatMessage', function(source, name, message)
@@ -23,30 +28,20 @@ end, false)
 -- PROXIMITY CHAT
 RegisterCommand('me', function(source, args, rawCommand)
     local source = source
-    local playerName
     args = table.concat(args, ' ')
-    TriggerEvent("vorp:getCharacter", source, function(user)
-        if user.lastname == nil then
-            playerName = user.firstname
-        else
-            playerName = user.firstname..' '..user.lastname
-        end
-        TriggerClientEvent('poke_rpchat:sendProximityMessage', -1, source, playerName, args, {255, 0, 0})
-    end)
+    local User = VorpCore.getUser(source)
+    local Character = User.getUsedCharacter
+    local playerName = Character.firstname..' '..Character.lastname
+    TriggerClientEvent('poke_rpchat:sendProximityMessage', -1, source, playerName, args, {255, 0, 0})
 end, false)
 
 RegisterCommand('do', function(source, args, rawCommand)
     local source = source
-    local playerName
     args = table.concat(args, ' ')
-    TriggerEvent("vorp:getCharacter", source, function(user)
-        if user.lastname == nil then
-            playerName = user.firstname
-        else
-            playerName = user.firstname..' '..user.lastname
-        end
-        TriggerClientEvent('poke_rpchat:sendProximityMessage', -1, source, playerName, args, {0, 0, 255})
-    end)
+    local User = VorpCore.getUser(source)
+    local Character = User.getUsedCharacter
+    local playerName = Character.firstname..' '..Character.lastname
+    TriggerClientEvent('poke_rpchat:sendProximityMessage', -1, source, playerName, args, {0, 0, 255})
 end, false)
 
 -- COMMERCE COMMAND
@@ -54,14 +49,10 @@ RegisterCommand('anuncio', function(source, args, rawCommand)
     local source = source
     local playerName
     args = table.concat(args, ' ')
-    TriggerEvent("vorp:getCharacter", source, function(user)
-        if user.lastname == nil then
-            playerName = user.firstname
-        else
-            playerName = user.firstname..' '..user.lastname
-        end
-        TriggerClientEvent("chatMessage", -1, "[Comercio] ["..playerName.."]", {9, 81, 3}, args)
-    end)
+    local User = VorpCore.getUser(source)
+    local Character = User.getUsedCharacter
+    local playerName = Character.firstname..' '..Character.lastname
+    TriggerClientEvent("chatMessage", -1, "[Comercio] ["..playerName.."]", {9, 81, 3}, args)
 end, false)
 
 -- PRIVATE MESSAGE
@@ -81,19 +72,14 @@ end, false)
 RegisterServerEvent('poke_rpchat:sendcall')
 AddEventHandler('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
     local _source = source
-    local sourcename
-    TriggerEvent("vorp:getCharacter", _source, function(user)
-        if user.lastname == nil then
-            sourcename = user.firstname
-        else
-            sourcename = user.firstname..' '..user.lastname
-        end
-        if emergency == 'testigo' then
-            TriggerClientEvent("chatMessage", -1, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
-            TriggerClientEvent('poke_rpchat:marcador', -1, targetCoords, emergency, -1747825963)
-        elseif emergency == 'auxilio' then
-            TriggerClientEvent("chatMessage", -1, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
-            TriggerClientEvent('poke_rpchat:marcador', -1, targetCoords, emergency, 1000514759)
-        end
-    end)
+    local User = VorpCore.getUser(_source)
+    local Character = User.getUsedCharacter
+    local sourcename = Character.firstname..' '..Character.lastname
+    if emergency == 'testigo' then
+        TriggerClientEvent("chatMessage", -1, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
+        TriggerClientEvent('poke_rpchat:marcador', -1, targetCoords, emergency, -1747825963)
+    elseif emergency == 'auxilio' then
+        TriggerClientEvent("chatMessage", -1, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
+        TriggerClientEvent('poke_rpchat:marcador', -1, targetCoords, emergency, 1000514759)
+    end
 end)
