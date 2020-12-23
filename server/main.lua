@@ -68,6 +68,20 @@ RegisterCommand('pm', function(source, args, user)
     end
 end, false)
 
+-- Check if players have specific job
+IsPlayerAllowed = function(job)
+    local players = GetPlayers()
+    for i = 1, #players, 1 do
+        local User = VorpCore.getUser(players[i])
+        local Character = User.getUsedCharacter
+        if Character.job == job then
+            return true
+        else
+            return false
+        end
+    end
+end
+
 -- SEND CALL
 RegisterServerEvent('poke_rpchat:sendcall')
 AddEventHandler('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
@@ -75,10 +89,10 @@ AddEventHandler('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
     local User = VorpCore.getUser(_source)
     local Character = User.getUsedCharacter
     local sourcename = Character.firstname..' '..Character.lastname
-    if emergency == 'testigo' then
+    if emergency == 'testigo' and IsPlayerAllowed("police") then
         TriggerClientEvent("chatMessage", -1, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
         TriggerClientEvent('poke_rpchat:marcador', -1, targetCoords, emergency, -1747825963)
-    elseif emergency == 'auxilio' then
+    elseif emergency == 'auxilio' and IsPlayerAllowed("doctor") then
         TriggerClientEvent("chatMessage", -1, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
         TriggerClientEvent('poke_rpchat:marcador', -1, targetCoords, emergency, 1000514759)
     end
