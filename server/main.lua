@@ -76,10 +76,9 @@ IsPlayerAllowed = function(job)
         local Character = User.getUsedCharacter
         if Character.job == job then
             return true
-        else
-            return false
         end
     end
+    return false
 end
 
 -- SEND CALL
