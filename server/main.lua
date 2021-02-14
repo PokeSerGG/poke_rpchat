@@ -90,14 +90,18 @@ AddEventHandler('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
     local sourcename = Character.firstname..' '..Character.lastname
     local isPolice, playersPolice = IsPlayerAllowed("police")
     local isDoctor, playersDoctor = IsPlayerAllowed("doctor")
-    if emergency == 'testigo' and isPolice then
-        TriggerClientEvent("chatMessage", playersPolice, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
-        TriggerClientEvent('poke_rpchat:marcador', playersPolice, targetCoords, emergency, -1747825963)
+    if emergency == 'testigo' then
+        if isPolice then
+            TriggerClientEvent("chatMessage", playersPolice, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
+            TriggerClientEvent('poke_rpchat:marcador', playersPolice, targetCoords, emergency, -1747825963)
+        end
         TriggerClientEvent("chatMessage", _source, "[Testigo]", {0, 147, 255}, msg)
         TriggerClientEvent('poke_rpchat:marcador', _source, targetCoords, emergency, -1747825963)
-    elseif emergency == 'auxilio' and isDoctor then
-        TriggerClientEvent("chatMessage", playersDoctor, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
-        TriggerClientEvent('poke_rpchat:marcador', playersDoctor, targetCoords, emergency, 1000514759)
+    elseif emergency == 'auxilio' then
+        if isDoctor then
+            TriggerClientEvent("chatMessage", playersDoctor, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
+            TriggerClientEvent('poke_rpchat:marcador', playersDoctor, targetCoords, emergency, 1000514759)
+        end
         TriggerClientEvent("chatMessage", _source, "[Auxilio]", {255, 0, 0}, msg)
         TriggerClientEvent('poke_rpchat:marcador', _source, targetCoords, emergency, 1000514759)
     end
