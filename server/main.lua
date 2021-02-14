@@ -75,7 +75,7 @@ IsPlayerAllowed = function(job)
         local User = VorpCore.getUser(players[i])
         local Character = User.getUsedCharacter
         if Character.job == job then
-            return true
+            return true, players[i]
         end
     end
     return false
@@ -88,11 +88,17 @@ AddEventHandler('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
     local User = VorpCore.getUser(_source)
     local Character = User.getUsedCharacter
     local sourcename = Character.firstname..' '..Character.lastname
-    if emergency == 'testigo' and IsPlayerAllowed("police") then
-        TriggerClientEvent("chatMessage", -1, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
+    local isPolice, playersPolice = IsPlayerAllowed("police")
+    local isDoctor, playersDoctor = IsPlayerAllowed("doctor")
+    if emergency == 'testigo' and isPolice then
+        TriggerClientEvent("chatMessage", playersPolice, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
+        TriggerClientEvent('poke_rpchat:marcador', playersPolice, targetCoords, emergency, -1747825963)
+        TriggerClientEvent("chatMessage", _source, "[Testigo]", {0, 147, 255}, msg)
         TriggerClientEvent('poke_rpchat:marcador', -1, targetCoords, emergency, -1747825963)
-    elseif emergency == 'auxilio' and IsPlayerAllowed("doctor") then
-        TriggerClientEvent("chatMessage", -1, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
+    elseif emergency == 'auxilio' and isDoctor then
+        TriggerClientEvent("chatMessage", playersDoctor, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
+        TriggerClientEvent('poke_rpchat:marcador', playersDoctor, targetCoords, emergency, 1000514759)
+        TriggerClientEvent("chatMessage", _source, "[Auxilio]", {255, 0, 0}, msg)
         TriggerClientEvent('poke_rpchat:marcador', -1, targetCoords, emergency, 1000514759)
     end
 end)
