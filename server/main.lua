@@ -94,11 +94,11 @@ AddEventHandler('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
         TriggerClientEvent("chatMessage", playersPolice, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
         TriggerClientEvent('poke_rpchat:marcador', playersPolice, targetCoords, emergency, -1747825963)
         TriggerClientEvent("chatMessage", _source, "[Testigo]", {0, 147, 255}, msg)
-        TriggerClientEvent('poke_rpchat:marcador', -1, targetCoords, emergency, -1747825963)
+        TriggerClientEvent('poke_rpchat:marcador', _source, targetCoords, emergency, -1747825963)
     elseif emergency == 'auxilio' and isDoctor then
         TriggerClientEvent("chatMessage", playersDoctor, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
         TriggerClientEvent('poke_rpchat:marcador', playersDoctor, targetCoords, emergency, 1000514759)
         TriggerClientEvent("chatMessage", _source, "[Auxilio]", {255, 0, 0}, msg)
-        TriggerClientEvent('poke_rpchat:marcador', -1, targetCoords, emergency, 1000514759)
+        TriggerClientEvent('poke_rpchat:marcador', _source, targetCoords, emergency, 1000514759)
     end
 end)
