@@ -14,11 +14,13 @@
 In config.lua file, you need to configure your server name and webhooks for each command
 
 ```lua
-['ooc'] = {
-    enable = true,
-    url = 'YourWeebhookURL',
-    color = 16753920 -- (You can get the decimal colors in https://www.mathsisfun.com/hexadecimal-decimal-colors.html)
-},
+Config.WebHooks = {
+    ['ooc'] = {
+        enable = true,
+        url = 'YourWeebhookURL',
+        color = 16753920 -- (You can get the decimal colors in https://www.mathsisfun.com/hexadecimal-decimal-colors.html)
+    },
+}
 ```
 
 ## 4. Discord
