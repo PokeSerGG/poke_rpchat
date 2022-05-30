@@ -8,8 +8,8 @@ RegisterCommand('report', function(source, args, rawCommand)
     local Character = User.getUsedCharacter
     local playerName = Character.firstname..' '..Character.lastname
     TriggerClientEvent("poke_rpchat:sendReport", -1, source, name, args)
-    if Config.UseDiscord then
-        DiscordWeb(16753920, "Nombre OOC: "..name.." / Nombre IC: "..playerName, args, "Reportes")
+    if Config.WebHooks['report'].enable then
+        DiscordWeb(16753920, "Nombre OOC: "..name.." / Nombre IC: "..playerName, args, "Reportes", Config.WebHooks['report'].url)
     end
 end, false)
 
@@ -23,17 +23,3 @@ VORP.addNewCallBack("getGroupReport", function(source, cb, item)
         cb('user')
     end
 end)
-
-function DiscordWeb(color, name, message, footer)
-    local embed = {
-        {
-            ["color"] = color,
-            ["title"] = "📛Reporte📛",
-            ["description"] = "**".. name .."** \n"..message,
-            ["footer"] = {
-                ["text"] = footer,
-            },
-        }
-    }
-    PerformHttpRequest(Config.WebHook, function(err, text, headers) end, 'POST', json.encode({username = Config.ServerName, embeds = embed}), { ['Content-Type'] = 'application/json' })
-end

@@ -11,8 +11,16 @@
 
 ## 3. Config
 
-- In config.lua file, you need to configure your discord webhook
+In config.lua file, you need to configure your server name and webhooks for each command
+
+```lua
+['ooc'] = {
+    enable = true,
+    url = 'YourWeebhookURL',
+    color = 16753920 -- (You can get the decimal colors in https://www.mathsisfun.com/hexadecimal-decimal-colors.html)
+},
+```
 
 ## 4. Discord
 
-Join discord to get support - [Discord](http://discord.vorpcore.com/)
+Join my Discord to get support - [Discord](https://discord.gg/AyfEp8hRUD)
