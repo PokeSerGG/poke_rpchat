@@ -14,6 +14,8 @@
 In config.lua file, you need to configure your server name and webhooks for each command
 
 ```lua
+Config.ServerName = 'YourServerName'
+
 Config.WebHooks = {
     ['ooc'] = {
         enable = true,
