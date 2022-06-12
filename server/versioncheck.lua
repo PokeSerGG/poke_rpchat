@@ -1,9 +1,9 @@
 if Config.VersionCheck then
     Citizen.CreateThread(function()
-        updatePath = "/PokeSerGG/poke_rpchat"
-        resourceName = "poke_rpchat ("..GetCurrentResourceName()..")"
+        local updatePath = "/PokeSerGG/poke_rpchat"
+        local resourceName = "poke_rpchat ("..GetCurrentResourceName()..")"
 
-        function checkVersion(err, responseText, headers)
+        function CheckVersion(err, responseText, headers)
             local curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
 
             if curVersion ~= responseText and tonumber(curVersion) < tonumber(responseText) then
@@ -15,6 +15,6 @@ if Config.VersionCheck then
             end
         end
 
-        PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", checkVersion, "GET")
+        PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", CheckVersion, "GET")
     end)
 end
