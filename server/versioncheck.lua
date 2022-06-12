@@ -4,7 +4,7 @@ if Config.VersionCheck then
         resourceName = "poke_rpchat ("..GetCurrentResourceName()..")"
 
         function checkVersion(err, responseText, headers)
-            curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
+            local curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
 
             if curVersion ~= responseText and tonumber(curVersion) < tonumber(responseText) then
                 print("^1"..resourceName.." is outdated. Newest version: "..responseText.." \nplease update it from https://github.com"..updatePath.."")
