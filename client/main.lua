@@ -14,9 +14,11 @@ AddEventHandler('poke_rpchat:sendProximityMessage', function(playerId, title, me
 	local playerPed, targetPed = PlayerPedId(), GetPlayerPed(target)
 	local playerCoords, targetCoords = GetEntityCoords(playerPed), GetEntityCoords(targetPed)
 
-	if target == player or #(playerCoords - targetCoords) < 20 then
-		TriggerEvent('chat:addMessage', {args = {title, message}, color = color})
-	end
+    if target ~= -1 then
+        if target == player or #(playerCoords - targetCoords) < 20 then
+            TriggerEvent('chat:addMessage', {args = {title, message}, color = color})
+        end
+    end
 end)
 
 RegisterCommand('testigo', function(source, args, rawCommand)
@@ -56,13 +58,13 @@ RegisterNetEvent('poke_rpchat:sendReport')
 AddEventHandler('poke_rpchat:sendReport', function(id, name, message)
     local myId = PlayerId()
     local pid = GetPlayerFromServerId(id)
-    
+
     if pid == myId then
-        
+
         TriggerEvent('chat:addMessage', {args = {"^1[Reporte]: ^r", "Enviado a todos los administradores"}})
-        
+
     end
-    
+
     if usergroup ~= 'user' then
         local message =  " [".. id .."] " .. name .."  "..": " .. message
         TriggerEvent('chat:addMessage', {args = {"^1[Reporte]:^r", message}})

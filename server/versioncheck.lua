@@ -4,16 +4,14 @@ if Config.VersionCheck then
         resourceName = "poke_rpchat ("..GetCurrentResourceName()..")"
 
         function checkVersion(err, responseText, headers)
-            curVersion = LoadResourceFile(GetCurrentResourceName(), "version") -- make sure the "version" file actually exists in your resource root!
+            curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
 
             if curVersion ~= responseText and tonumber(curVersion) < tonumber(responseText) then
-                print("\n###############################")
-                print("\n"..resourceName.." is outdated, should be:\n"..responseText.."is:\n"..curVersion.."\nplease update it from https://github.com"..updatePath.."")
-                print("\n###############################")
+                print("^1"..resourceName.." is outdated. Newest version: "..responseText.." \nplease update it from https://github.com"..updatePath.."")
             elseif tonumber(curVersion) > tonumber(responseText) then
                 print("You somehow skipped a few versions of "..resourceName.." or the git went offline, if it's still online i advise you to update ( or downgrade? )")
             else
-                print("\n"..resourceName.." is up to date, have fun!")
+                print("^2"..resourceName.." is up to date, have fun!")
             end
         end
 

@@ -1,5 +1,7 @@
 Config = {}
 
+Config.VersionCheck = true
+
 Config.UseDiscord = true
 
 Config.ServerName = 'YourServerName'

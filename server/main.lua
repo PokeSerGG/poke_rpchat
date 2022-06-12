@@ -61,7 +61,6 @@ end, false)
 -- COMMERCE COMMAND
 RegisterCommand('anuncio', function(source, args, rawCommand)
     local source = source
-    local playerName
     args = table.concat(args, ' ')
     local User = VorpCore.getUser(source)
     local oocName = GetPlayerName(source)
