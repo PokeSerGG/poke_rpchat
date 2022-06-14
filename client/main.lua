@@ -37,21 +37,18 @@ end, false)
 
 RegisterNetEvent('poke_rpchat:marcador')
 AddEventHandler('poke_rpchat:marcador', function(targetCoords, type, blip)
-    local alpha = 250
-    local call = N_0x554d9d53f696d002(1664425300, targetCoords.x, targetCoords.y, targetCoords.z)
+    local alpha = Config.BlipCallTimer
+    local call = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, targetCoords.x, targetCoords.y, targetCoords.z)
 
     SetBlipSprite(call, blip, 1)
     Citizen.InvokeNative(0x9CB1A1623062F402, call, type)
 
-    while alpha ~= 0 do
-        Citizen.Wait(400)
+    while alpha > 0 do
+        Citizen.Wait(1000)
         alpha = alpha - 1
-
-        if alpha == 0 then
-            RemoveBlip(call)
-            return
-        end
     end
+
+    RemoveBlip(call)
 end)
 
 RegisterNetEvent('poke_rpchat:sendReport')
@@ -60,13 +57,11 @@ AddEventHandler('poke_rpchat:sendReport', function(id, name, message)
     local pid = GetPlayerFromServerId(id)
 
     if pid == myId then
-
         TriggerEvent('chat:addMessage', {args = {"^1[Reporte]: ^r", "Enviado a todos los administradores"}})
-
     end
 
     if usergroup ~= 'user' then
-        local message =  " [".. id .."] " .. name .."  "..": " .. message
+        message =  " [".. id .."] " .. name .."  "..": " .. message
         TriggerEvent('chat:addMessage', {args = {"^1[Reporte]:^r", message}})
     end
 end)

@@ -6,6 +6,8 @@ Config.UseDiscord = true
 
 Config.ServerName = 'YourServerName'
 
+Config.BlipCallTimer = 60 -- Time in seconds before the call blip disappears
+
 Config.WebHooks = {
     -- Report
     ['report'] = {
