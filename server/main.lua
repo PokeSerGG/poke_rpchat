@@ -1,4 +1,4 @@
-VorpCore = {}
+local VorpCore = {}
 
 TriggerEvent("getCore",function(core)
     VorpCore = core
