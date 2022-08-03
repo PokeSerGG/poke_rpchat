@@ -8,6 +8,11 @@ Config.ServerName = 'YourServerName'
 
 Config.BlipCallTimer = 60 -- Time in seconds before the call blip disappears
 
+Config.JobNames = {
+    ['police'] = 'police',
+    ['doctor'] = 'doctor',
+}
+
 Config.WebHooks = {
     -- Report
     ['report'] = {

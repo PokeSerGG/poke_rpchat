@@ -89,19 +89,6 @@ RegisterCommand('pm', function(source, args, user)
     end
 end, false)
 
--- Check if players have specific job
-IsPlayerAllowed = function(job)
-    local players = GetPlayers()
-    for i = 1, #players, 1 do
-        local User = VorpCore.getUser(players[i])
-        local Character = User.getUsedCharacter
-        if Character.job == job then
-            return true, players[i]
-        end
-    end
-    return false
-end
-
 -- SEND CALL
 RegisterServerEvent('poke_rpchat:sendcall')
 AddEventHandler('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
@@ -109,23 +96,32 @@ AddEventHandler('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
     local User = VorpCore.getUser(_source)
     local Character = User.getUsedCharacter
     local sourcename = Character.firstname..' '..Character.lastname
-    local isPolice, playersPolice = IsPlayerAllowed("police")
-    local isDoctor, playersDoctor = IsPlayerAllowed("doctor")
+    local players = GetPlayers()
     if emergency == 'testigo' then
-        if isPolice then
-            TriggerClientEvent("chatMessage", playersPolice, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
-            TriggerClientEvent('poke_rpchat:marcador', playersPolice, targetCoords, emergency, -1747825963)
+        for k,v in pairs(players) do
+            local othPly = VorpCore.getUser(v)
+            local othCharacter = othPly.getUsedCharacter
+            if othCharacter.job == Config.JobNames.police then
+                TriggerClientEvent("chatMessage", v, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
+                TriggerClientEvent('poke_rpchat:marcador', v, targetCoords, emergency, -1747825963)
+            end
         end
+
         TriggerClientEvent("chatMessage", _source, "[Testigo]", {0, 147, 255}, msg)
         TriggerClientEvent('poke_rpchat:marcador', _source, targetCoords, emergency, -1747825963)
         if Config.WebHooks['testigo'].enable then
             DiscordWeb(Config.WebHooks['testigo'].color, "Nombre OOC: "..GetPlayerName(_source).." / Nombre IC: "..sourcename, msg, "Testigo", Config.WebHooks['testigo'].url)
         end
     elseif emergency == 'auxilio' then
-        if isDoctor then
-            TriggerClientEvent("chatMessage", playersDoctor, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
-            TriggerClientEvent('poke_rpchat:marcador', playersDoctor, targetCoords, emergency, 1000514759)
+        for k,v in pairs(players) do
+            local othPly = VorpCore.getUser(v)
+            local othCharacter = othPly.getUsedCharacter
+            if othCharacter.job == Config.JobNames.doctor then
+                TriggerClientEvent("chatMessage", v, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
+                TriggerClientEvent('poke_rpchat:marcador', v, targetCoords, emergency, 1000514759)
+            end
         end
+
         TriggerClientEvent("chatMessage", _source, "[Auxilio]", {255, 0, 0}, msg)
         TriggerClientEvent('poke_rpchat:marcador', _source, targetCoords, emergency, 1000514759)
         if Config.WebHooks['auxilio'].enable then
