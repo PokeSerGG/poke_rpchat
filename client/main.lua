@@ -6,21 +6,6 @@ Citizen.CreateThread(function()
     end, 'i')
 end)
 
-RegisterNetEvent('poke_rpchat:sendProximityMessage')
-AddEventHandler('poke_rpchat:sendProximityMessage', function(playerId, title, message, color)
-	local player = PlayerId()
-	local target = GetPlayerFromServerId(playerId)
-
-	local playerPed, targetPed = PlayerPedId(), GetPlayerPed(target)
-	local playerCoords, targetCoords = GetEntityCoords(playerPed), GetEntityCoords(targetPed)
-
-    if target ~= -1 then
-        if target == player or #(playerCoords - targetCoords) < 20 then
-            TriggerEvent('chat:addMessage', {args = {title, message}, color = color})
-        end
-    end
-end)
-
 RegisterCommand('testigo', function(source, args, rawCommand)
     local playerCoords = GetEntityCoords(PlayerPedId(), true)
 	local msg = rawCommand:sub(9)
@@ -35,8 +20,7 @@ RegisterCommand('auxilio', function(source, args, rawCommand)
     TriggerServerEvent('poke_rpchat:sendcall', { x = playerCoords.x, y = playerCoords.y, z = playerCoords.z }, msg, emergency)
 end, false)
 
-RegisterNetEvent('poke_rpchat:marcador')
-AddEventHandler('poke_rpchat:marcador', function(targetCoords, type, blip)
+RegisterNetEvent('poke_rpchat:marcador', function(targetCoords, type, blip)
     local alpha = Config.BlipCallTimer
     local call = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, targetCoords.x, targetCoords.y, targetCoords.z)
 
@@ -51,8 +35,7 @@ AddEventHandler('poke_rpchat:marcador', function(targetCoords, type, blip)
     RemoveBlip(call)
 end)
 
-RegisterNetEvent('poke_rpchat:sendReport')
-AddEventHandler('poke_rpchat:sendReport', function(id, name, message)
+RegisterNetEvent('poke_rpchat:sendReport', function(id, name, message)
     local myId = PlayerId()
     local pid = GetPlayerFromServerId(id)
 

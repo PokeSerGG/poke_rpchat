@@ -8,6 +8,8 @@ Config.ServerName = 'YourServerName'
 
 Config.BlipCallTimer = 60 -- Time in seconds before the call blip disappears
 
+Config.ProximityDistance = 5.0 -- Proximity Distance for proximity commands (local ooc, me, do, etc...)
+
 Config.JobNames = {
     ['police'] = 'police',
     ['doctor'] = 'doctor',

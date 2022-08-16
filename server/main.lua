@@ -4,11 +4,36 @@ TriggerEvent("getCore",function(core)
     VorpCore = core
 end)
 
+local function DiscordWeb(color, name, message, footer, url)
+    local embed = {
+        {
+            ["color"] = color,
+            ["title"] = "📛Reporte📛",
+            ["description"] = "**".. name .."** \n"..message,
+            ["footer"] = {
+                ["text"] = footer,
+            },
+        }
+    }
+    PerformHttpRequest(url, function(err, text, headers) end, 'POST', json.encode({username = Config.ServerName, embeds = embed}), { ['Content-Type'] = 'application/json' })
+end
+
 -- LOCAL OOC
 AddEventHandler('chatMessage', function(source, name, message)
     if string.sub(message, 1, string.len("/")) ~= "/" then
-        local name = GetPlayerName(source)
-        TriggerClientEvent('poke_rpchat:sendProximityMessage', -1, source, '[OOC] '..name, message, {128, 128, 128})
+        name = GetPlayerName(source)
+        local playerPed = GetPlayerPed(source)
+        local playerCoords = GetEntityCoords(playerPed)
+        local totalplayers = GetPlayers()
+        for _,v in pairs(totalplayers) do
+            local targetPed = GetPlayerPed(v)
+            local dist = #(playerCoords - GetEntityCoords(targetPed))
+
+            if dist < Config.ProximityDistance then
+                TriggerClientEvent('chat:addMessage', v, { args = {'[OOC] '..name, message}, color = {128, 128, 128} })
+            end
+        end
+
         if Config.WebHooks['ooc'].enable then
             DiscordWeb(Config.WebHooks['ooc'].color, "Nombre OOC: "..name, message, "OOC", Config.WebHooks['ooc'].url)
         end
@@ -18,12 +43,12 @@ end)
 
 -- CHAT COMMANDS
 RegisterCommand('ayuda', function(source, args, rawCommand)
-    local source = source
+    local _source = source
     local msg = rawCommand:sub(6)
     if player ~= false then
         if args[1] ~= nil then
-            local user = GetPlayerName(source)
-            TriggerClientEvent("chatMessage", -1, "[Ayuda] [ID:"..source.."] ["..user.."]", {135, 105, 105}, msg)
+            local user = GetPlayerName(_source)
+            TriggerClientEvent("chatMessage", -1, "[Ayuda] [ID:".._source.."] ["..user.."]", {135, 105, 105}, msg)
             if Config.WebHooks['help'].enable then
                 DiscordWeb(Config.WebHooks['help'].color, "Nombre OOC: "..user, msg, "Help", Config.WebHooks['help'].url)
             end
@@ -33,26 +58,51 @@ end, false)
 
 -- PROXIMITY CHAT
 RegisterCommand('me', function(source, args, rawCommand)
-    local source = source
+    local _source = source
     args = table.concat(args, ' ')
-    local User = VorpCore.getUser(source)
-    local oocName = GetPlayerName(source)
+    local User = VorpCore.getUser(_source)
+    local oocName = GetPlayerName(_source)
     local Character = User.getUsedCharacter
     local playerName = Character.firstname..' '..Character.lastname
-    TriggerClientEvent('poke_rpchat:sendProximityMessage', -1, source, playerName, args, {255, 0, 0})
+
+    local playerPed = GetPlayerPed(_source)
+    local playerCoords = GetEntityCoords(playerPed)
+    local totalplayers = GetPlayers()
+    for _,v in pairs(totalplayers) do
+        local targetPed = GetPlayerPed(v)
+        local dist = #(playerCoords - GetEntityCoords(targetPed))
+
+        if dist < Config.ProximityDistance then
+            TriggerClientEvent('chat:addMessage', v, { args = {playerName, args}, color = {255, 0, 0} })
+        end
+    end
+
     if Config.WebHooks['me'].enable then
         DiscordWeb(Config.WebHooks['me'].color, "Nombre OOC: "..oocName.." / Nombre IC: "..playerName, args, "Me", Config.WebHooks['me'].url)
     end
 end, false)
 
 RegisterCommand('do', function(source, args, rawCommand)
-    local source = source
+    local _source = source
     args = table.concat(args, ' ')
-    local User = VorpCore.getUser(source)
-    local oocName = GetPlayerName(source)
+    local User = VorpCore.getUser(_source)
+    local oocName = GetPlayerName(_source)
     local Character = User.getUsedCharacter
     local playerName = Character.firstname..' '..Character.lastname
-    TriggerClientEvent('poke_rpchat:sendProximityMessage', -1, source, playerName, args, {0, 0, 255})
+
+    local playerPed = GetPlayerPed(_source)
+    local playerCoords = GetEntityCoords(playerPed)
+    local totalplayers = GetPlayers()
+
+    for _,v in pairs(totalplayers) do
+        local targetPed = GetPlayerPed(v)
+        local dist = #(playerCoords - GetEntityCoords(targetPed))
+
+        if dist < Config.ProximityDistance then
+            TriggerClientEvent('chat:addMessage', v, { args = {playerName, args}, color = {0, 0, 255} })
+        end
+    end
+
     if Config.WebHooks['do'].enable then
         DiscordWeb(Config.WebHooks['do'].color, "Nombre OOC: "..oocName.." / Nombre IC: "..playerName, args, "Do", Config.WebHooks['do'].url)
     end
@@ -60,10 +110,10 @@ end, false)
 
 -- COMMERCE COMMAND
 RegisterCommand('anuncio', function(source, args, rawCommand)
-    local source = source
+    local _source = source
     args = table.concat(args, ' ')
-    local User = VorpCore.getUser(source)
-    local oocName = GetPlayerName(source)
+    local User = VorpCore.getUser(_source)
+    local oocName = GetPlayerName(_source)
     local Character = User.getUsedCharacter
     local playerName = Character.firstname..' '..Character.lastname
     TriggerClientEvent("chatMessage", -1, "[Comercio] ["..playerName.."]", {9, 81, 3}, args)
@@ -90,8 +140,7 @@ RegisterCommand('pm', function(source, args, user)
 end, false)
 
 -- SEND CALL
-RegisterServerEvent('poke_rpchat:sendcall')
-AddEventHandler('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
+RegisterNetEvent('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
     local _source = source
     local User = VorpCore.getUser(_source)
     local Character = User.getUsedCharacter
@@ -129,17 +178,3 @@ AddEventHandler('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
         end
     end
 end)
-
-function DiscordWeb(color, name, message, footer, url)
-    local embed = {
-        {
-            ["color"] = color,
-            ["title"] = "📛Reporte📛",
-            ["description"] = "**".. name .."** \n"..message,
-            ["footer"] = {
-                ["text"] = footer,
-            },
-        }
-    }
-    PerformHttpRequest(url, function(err, text, headers) end, 'POST', json.encode({username = Config.ServerName, embeds = embed}), { ['Content-Type'] = 'application/json' })
-end
