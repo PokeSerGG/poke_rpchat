@@ -6,6 +6,16 @@ Citizen.CreateThread(function()
     end, 'i')
 end)
 
+local function checkTable(tbl, element)
+    for _, value in pairs(tbl) do
+        if value == element then
+            return true
+        end
+    end
+
+    return false
+end
+
 RegisterCommand('testigo', function(source, args, rawCommand)
     local playerCoords = GetEntityCoords(PlayerPedId(), true)
 	local msg = rawCommand:sub(9)
@@ -43,7 +53,9 @@ RegisterNetEvent('poke_rpchat:sendReport', function(id, name, message)
         TriggerEvent('chat:addMessage', {args = {"^1[Reporte]: ^r", "Enviado a todos los administradores"}})
     end
 
-    if usergroup ~= 'user' then
+    local reportGroups = Config.ReportGroups or {'admin'}
+
+    if checkTable(reportGroups, usergroup) then
         message =  " [".. id .."] " .. name .."  "..": " .. message
         TriggerEvent('chat:addMessage', {args = {"^1[Reporte]:^r", message}})
     end

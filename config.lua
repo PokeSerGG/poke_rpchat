@@ -71,3 +71,5 @@ Config.WebHooks = {
         color = 16753920,
     },
 }
+
+Config.ReportGroups = { 'admin', 'moderator' } -- Add here all the groups that you want to receive the reports
