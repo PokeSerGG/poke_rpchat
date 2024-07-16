@@ -1,8 +1,4 @@
-local VorpCore = {}
-
-TriggerEvent("getCore",function(core)
-    VorpCore = core
-end)
+local VORPcore = exports.vorp_core:GetCore()
 
 local function DiscordWeb(color, name, message, footer, url)
     local embed = {
@@ -60,7 +56,7 @@ end, false)
 RegisterCommand('me', function(source, args, rawCommand)
     local _source = source
     args = table.concat(args, ' ')
-    local User = VorpCore.getUser(_source)
+    local User = VORPcore.getUser(_source)
     local oocName = GetPlayerName(_source)
     local Character = User.getUsedCharacter
     local playerName = Character.firstname..' '..Character.lastname
@@ -85,7 +81,7 @@ end, false)
 RegisterCommand('do', function(source, args, rawCommand)
     local _source = source
     args = table.concat(args, ' ')
-    local User = VorpCore.getUser(_source)
+    local User = VORPcore.getUser(_source)
     local oocName = GetPlayerName(_source)
     local Character = User.getUsedCharacter
     local playerName = Character.firstname..' '..Character.lastname
@@ -112,7 +108,7 @@ end, false)
 RegisterCommand('anuncio', function(source, args, rawCommand)
     local _source = source
     args = table.concat(args, ' ')
-    local User = VorpCore.getUser(_source)
+    local User = VORPcore.getUser(_source)
     local oocName = GetPlayerName(_source)
     local Character = User.getUsedCharacter
     local playerName = Character.firstname..' '..Character.lastname
@@ -142,13 +138,13 @@ end, false)
 -- SEND CALL
 RegisterNetEvent('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
     local _source = source
-    local User = VorpCore.getUser(_source)
+    local User = VORPcore.getUser(_source)
     local Character = User.getUsedCharacter
     local sourcename = Character.firstname..' '..Character.lastname
     local players = GetPlayers()
     if emergency == 'testigo' then
         for k,v in pairs(players) do
-            local othPly = VorpCore.getUser(v)
+            local othPly = VORPcore.getUser(v)
             local othCharacter = othPly.getUsedCharacter
             if othCharacter.job == Config.JobNames.police then
                 TriggerClientEvent("chatMessage", v, "[Testigo] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
@@ -163,7 +159,7 @@ RegisterNetEvent('poke_rpchat:sendcall', function(targetCoords, msg, emergency)
         end
     elseif emergency == 'auxilio' then
         for k,v in pairs(players) do
-            local othPly = VorpCore.getUser(v)
+            local othPly = VORPcore.getUser(v)
             local othCharacter = othPly.getUsedCharacter
             if othCharacter.job == Config.JobNames.doctor then
                 TriggerClientEvent("chatMessage", v, "[Auxilio] [".._source.."] ["..sourcename.."]", {255, 0, 0}, msg)
