@@ -1,9 +1,8 @@
+local VORPcore = exports.vorp_core:GetCore()
 local usergroup = 'user'
 
 Citizen.CreateThread(function()
-    TriggerEvent("vorp:ExecuteServerCallBack", "getGroupReport", function(group)
-        usergroup = group
-    end, 'i')
+    usergroup = VORPcore.Callback.TriggerAwait('getGroupReport', GetPlayerServerId(PlayerId()))
 end)
 
 local function checkTable(tbl, element)

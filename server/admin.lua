@@ -1,8 +1,4 @@
-local VORPcore = {}
-
-TriggerEvent("getCore", function(core)
-    VORPcore = core
-end)
+local VORPcore = exports.vorp_core:GetCore()
 
 RegisterCommand('report', function(source, args, rawCommand)
     local _source = source
@@ -16,7 +12,7 @@ RegisterCommand('report', function(source, args, rawCommand)
     end
 end, false)
 
-VORPcore.addRpcCallback("getGroupReport", function(source, cb)
+VORPcore.Callback.Register('getGroupReport', function(source,cb)
     local _source = source
     local User = VORPcore.getUser(_source)
     local group = User.getGroup
